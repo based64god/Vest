@@ -1,4 +1,4 @@
 Vest
 ====
 
-Facebook violent crime tracker
+A tool to track, predict, and avoid violent crime
