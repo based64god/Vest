@@ -17,21 +17,21 @@ if __name__=="__main__":
 			crawler.crawlPR()
 		elif (inputArgs[1]=="-fb"):
 			crawler.crawlFB()
-		else 
+		else:
 			print ("Invalid crawler flags")
 			sys.exit()
 	elif (inputArgs[0]=="-db"):
 		db=Database()
 		if (inputArgs[1]=="-d"):
 			db.dump()
-		elif (inputArgs[1]=="-a")
+		elif (inputArgs[1]=="-a"):
 			db.stats()
-		elif (inputArgs[1]=="-p")
+		elif (inputArgs[1]=="-p"):
 			db.predict()
-		else
+		else:
 			print ("Invalid db flags")
 			sys.exit()
-	else
+	else:
 		print ("Invalid options")
 		sys.exit()
 
