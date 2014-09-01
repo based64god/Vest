@@ -1,1 +1,2 @@
-import facebook
+# import facebook
+import urllib
