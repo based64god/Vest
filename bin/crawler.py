@@ -1,3 +1,3 @@
-from facebook_sdk import *
+#from facebook_sdk import *
 import urllib
 
