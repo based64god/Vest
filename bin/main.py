@@ -10,27 +10,38 @@ if __name__=="__main__":
 	print ("Vest v0.1: \nOptions: -crawler, -data\nFlags implemented for -crawler:\nFlags implemented for -data:\n")
 	inputText=input("Enter a command:\n").strip().toLower().replace("  ","")
 	print (inputText)
+
 	inputArgs=inputText.split(" ")
+
 	if (inputArgs[0]=="-crawler"):
 		crawler=Crawler()
+
 		if (inputArgs[1]=="-pr"):
 			crawler.crawlPR()
+
 		elif (inputArgs[1]=="-fb"):
 			crawler.crawlFB()
+
 		else:
 			print ("Invalid crawler flags")
 			sys.exit()
+
 	elif (inputArgs[0]=="-db"):
 		db=Database()
+
 		if (inputArgs[1]=="-d"):
 			db.dump()
+
 		elif (inputArgs[1]=="-a"):
 			db.stats()
+
 		elif (inputArgs[1]=="-p"):
 			db.predict()
+
 		else:
 			print ("Invalid db flags")
 			sys.exit()
+			
 	else:
 		print ("Invalid options")
 		sys.exit()
