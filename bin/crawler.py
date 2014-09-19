@@ -19,17 +19,6 @@ facebook_id = ""
 #!# End Config #!#
 
 # Misc Functions
-    
-def show_status(message):
-    sys.stdout.write("[+] %s, " % message)
-    sys.stdout.flush()
-
-def get_random_useragent():
-    base_agent = "Mozilla/%.1f (Windows; U; Windows NT 5.1; en-US; rv:%.1f.%.1f) Gecko/%d0%d Firefox/%.1f.%.1f"
-    return base_agent % ((random.random() + 5),
-                         (random.random() + random.randint(1, 8)), random.random(),
-                         random.randint(2000, 2100), random.randint(92215, 99999),
-                         (random.random() + random.randint(3, 9)), random.random())
 
 def parse_forms(page_url, page_content):
     soup = BeautifulSoup(page_content)
@@ -77,7 +66,7 @@ def parse_forms(page_url, page_content):
 
 def login():
     global facebook_id
-    show_status("Logging in")
+    print "[!] Logging in."
 
     start_url = "http://facebook.com/"
     page = session.get(start_url).content.decode('utf-8', 'replace')
@@ -99,10 +88,12 @@ def login():
 
     return True
 
-
+def get_friends():
+    page = requests.session().get("https://www.facebook.com/paul.revereiv/friends")
+    print page.text
 
 if __name__ == '__main__':
-    session = requests.session()#headers={"User-Agent": get_random_useragent()})
+    session = requests.session()
 
     # Log on in
     if not login():
@@ -111,6 +102,8 @@ if __name__ == '__main__':
         print "[!] Failed to log in to Facebook with the username and password provided."
         raw_input("[+] Press enter to exit...")
         exit()
+    else:
+        get_friends()
 
     print
     print "[!] Login successful."
