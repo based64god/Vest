@@ -92,6 +92,18 @@ def get_friends():
     page = requests.session().get("https://www.facebook.com/paul.revereiv/friends")
     print page.text
 
+def parse_fb_friend_page(text): #function that when given the html of a friends page will return the id's of the person's friends
+    friends = []
+    for i in range(len(text)):
+        if(text[i:i+8] == '<a href='):
+            j = i
+            while(j < len(text) and text[j] != '?' ):
+                j = j + 1
+            if( not '/' in text[i+34:j] and not '.php' in text[i+34:j]):
+                friends.append(text[i+34:j])
+    return friends
+
+
 if __name__ == '__main__':
     session = requests.session()
 
