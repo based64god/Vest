@@ -1,4 +1,3 @@
-from crawler import *
 from database import *
 import sys
 
@@ -20,8 +19,7 @@ if __name__=="__main__":
 			crawler.crawlPR()
 
 		elif (inputArgs[1]=="-fb"):
-			crawler.crawlFB()
-
+			craweler.crawlFB()
 		else:
 			print ("Invalid crawler flags")
 			sys.exit()

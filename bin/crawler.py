@@ -11,7 +11,7 @@ import parse_url
 # Global Config
 ###
 
-username = raw_input("[+] Facebook Email: ")
+username = input("[+] Facebook Email: ")
 password = getpass.getpass("[+] Facebook Password (will not show): ")
 session     = None
 facebook_id = ""
@@ -66,7 +66,7 @@ def parse_forms(page_url, page_content):
 
 def login():
     global facebook_id
-    print "[!] Logging in."
+    print ("[!] Logging in.")
 
     start_url = "http://facebook.com/"
     page = session.get(start_url).content.decode('utf-8', 'replace')
@@ -79,7 +79,7 @@ def login():
     form_data['pass'] = password
     request = session.post(form_action, form_data)
 
-    print "Done"
+    print ("Done")
 
     if "Log Out" not in request.content:
         return False
@@ -90,7 +90,7 @@ def login():
 
 def get_friends():
     page = requests.session().get("https://www.facebook.com/paul.revereiv/friends")
-    print page.text
+    print (page.text)
 
 def parse_fb_friend_page(text): #function that when given the html of a friends page will return the id's of the person's friends
     friends = []
@@ -109,21 +109,21 @@ if __name__ == '__main__':
 
     # Log on in
     if not login():
-        print "+" * 85
-        print "[!] Error!"
-        print "[!] Failed to log in to Facebook with the username and password provided."
-        raw_input("[+] Press enter to exit...")
+        print ("+" * 85)
+        print ("[!] Error!")
+        print ("[!] Failed to log in to Facebook with the username and password provided.")
+        input("[+] Press enter to exit...")
         exit()
     else:
         get_friends()
 
-    print
-    print "[!] Login successful."
+    print ()
+    print ("[!] Login successful.")
     
-    print
-    print "-" * 85
-    print "[+] All done..."
-    raw_input("[+] Press enter to exit...")
+    print ()
+    print ("-" * 85)
+    print ("[+] All done...")
+    input("[+] Press enter to exit...")
 
 
 
