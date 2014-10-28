@@ -9,6 +9,7 @@ import time
 
 username = raw_input("[+] Facebook Email: ")
 password = getpass.getpass("[+] Facebook Password (will not show): ") 
+fb_id = raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person's friends you want to retrive: ")
 driver = webdriver.Firefox()
 
 
@@ -35,13 +36,11 @@ def login():
 
     print ("Done")
 
-    #facebook_id = request.content.split("({\"user\":\"")[1].split("\"")[0]
-
     return True
 
 def scroll_friends():
     print ("[!] loading friends...")
-    driver.get("https://www.facebook.com/paul.revereiv/friends")
+    driver.get("https://www.facebook.com/%s/friends" %fb_id)
 
     #print driver.page_source
 
