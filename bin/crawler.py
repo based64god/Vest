@@ -36,7 +36,7 @@ def get_friends(fb_id):
                         #scroll down the page
     scroll_downs = 100 #arbitrary number of pagedowns, might need to be increased
     while scroll_downs > 0:
-        time.sleep(1)
+        time.sleep(.5)
         driver.execute_script("window.scrollBy(0, 3000);")
         scroll_downs -= 1
 
@@ -67,24 +67,34 @@ def parse_fb_friend_page(text):
 
 
     #call after login
-    #this is a recursive function
-    #start_id is the string of the person we start crawling from
-    #friends is the list of strings of an id's friends, empty on our first call
-    #depth is an integer indicating how far the crawler should crawl, is reduced with each recursive call
-    #returns map containing data, map will link a string of an id to a set of all of the id's friends
-def crawl_to_depth(start_id, friends, depth):
-    pass
-
+    #start_id is the string of the id we start crawling from
+    #depth is an integer indicating how far the crawler should crawl, is decremented as we crawl each depth
+    #returns map containing data, map will link a string of an id to a list of all of the id's friends
+def crawl_to_depth(start_id, depth):
+    friend_map = {}
+    queue = get_friends(start_id)
+    friend_map[start_id] = queue
+    while depth > 0:
+        for _id in queue:
+            if not _id in friend_map.keys():
+                friends = get_friends(_id)
+                friend_map[_id] = friends
+                for f in friends:
+                    if not f in queue:
+                        queue.append(f) #we dont need to remove from the queue because we will only iterate
+                                        #over it once to view everyone reachable at that depth
+        depth -= 1
+    return friend_map
 
 
 
 if __name__ == '__main__':
 
     #config
-    username = raw_input("[+] Facebook Email: ")
-    password = getpass.getpass("[+] Facebook Password (will not show): ") 
-    fb_id = raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person's friends you want to retrive: ")
-    depth = raw_input("[+] Depth do you want to scroll this id's friends: ")
+    username = str(raw_input("[+] Facebook Email: "))
+    password = str(getpass.getpass("[+] Facebook Password (will not show): "))
+    fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person's friends you want to retrive: "))
+    depth = int(raw_input("[+] Depth do you want to scroll this id's friends (Enter 1 to simply output this id's friends): "))
     driver = webdriver.Firefox()
     #end conifg
     
@@ -93,10 +103,17 @@ if __name__ == '__main__':
         print ("[!] Error!")
         print ("[!] Failed to log in to Facebook with the username and password provided.")
         exit()
-    else:
+    elif depth == 1:
         friend_list = get_friends(fb_id) #if login is sucessful then find the friends of the given facebook id
         for f in friend_list:
             print f
+    else:
+        friend_map = crawl_to_depth(fb_id, depth)
+        for key in friend_map.keys():
+            print ("%s's friends:" %key)
+            for _id in friend_map[key]:
+                print ("    %s" %_id)
+
 
     print ("")
     
