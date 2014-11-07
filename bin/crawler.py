@@ -4,7 +4,10 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 
-def login(username, password): #enters in information for login
+    #username is the name of the account that will be looking up all of a person's friends
+    #password is the password associated with the account
+    #returns true if the login is successful, false if not
+def login(username, password):
     global facebook_id
     print ("[!] Logging in.")
 
@@ -19,16 +22,18 @@ def login(username, password): #enters in information for login
 
     time.sleep(5)
 
-    print ("Done")
+    return not "UIPage_LoggedOut" in driver.page_source #"UIPage_LoggedOut" will be in the html of the page if the user is not logged in
+                                                        #it should not appear here unless the login is unsuccessful, which will cause 
+                                                        #the function to return false
 
-    return True
 
-def scroll_friends(fb_id): #scrolls down friends page of a given facebook id and returns the html of the page for parsing
+    #scrolls down the friend page of a given id that the user account is friends with
+    #returns text of the html of the page
+def get_friends(fb_id):
     print ("[!] loading friends...")
-
     driver.get("https://www.facebook.com/%s/friends" %fb_id) #load the page
 
-            #scroll down the page
+                        #scroll down the page
     scroll_downs = 100 #arbitrary number of pagedowns, might need to be increased
     while scroll_downs > 0:
         time.sleep(1)
@@ -36,15 +41,17 @@ def scroll_friends(fb_id): #scrolls down friends page of a given facebook id and
         scroll_downs -= 1
 
     elements = driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
-    ret_string = ""
-    for e in elements:
-        ret_string += e.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
+    html_string = ""
+    for elem in elements:
+        html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
 
     print ("[!] Done loading")
-    return ret_string
+    return parse_fb_friend_page(html_string)
 
-def parse_fb_friend_page(text): #function that when given the html of a friends page will return the id's of the person's friends
 
+    #takes html text of friends page
+    #returns list of strings of the id's of the person's friends
+def parse_fb_friend_page(text):
     print ("[!] parsing...")
     friends = []
     for i in range(len(text)):
@@ -59,6 +66,16 @@ def parse_fb_friend_page(text): #function that when given the html of a friends 
     return friends
 
 
+    #call after login
+    #this is a recursive function
+    #start_id is the string of the person we start crawling from
+    #friends is the list of strings of an id's friends, empty on our first call
+    #depth is an integer indicating how far the crawler should crawl, is reduced with each recursive call
+    #returns map containing data, map will link a string of an id to a set of all of the id's friends
+def crawl_to_depth(start_id, friends, depth):
+    pass
+
+
 
 
 if __name__ == '__main__':
@@ -67,17 +84,17 @@ if __name__ == '__main__':
     username = raw_input("[+] Facebook Email: ")
     password = getpass.getpass("[+] Facebook Password (will not show): ") 
     fb_id = raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person's friends you want to retrive: ")
+    depth = raw_input("[+] Depth do you want to scroll this id's friends: ")
     driver = webdriver.Firefox()
     #end conifg
+    
     if not login(username, password):
         print ("+" * 85)
         print ("[!] Error!")
         print ("[!] Failed to log in to Facebook with the username and password provided.")
-        input("[+] Press enter to exit...")
         exit()
     else:
-        source = scroll_friends(fb_id) #if login is sucessful then find the friends of the given facebook id
-        friend_list = parse_fb_friend_page(source)
+        friend_list = get_friends(fb_id) #if login is sucessful then find the friends of the given facebook id
         for f in friend_list:
             print f
 
