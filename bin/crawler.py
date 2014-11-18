@@ -98,6 +98,14 @@ class FBCrawler(object):
             depth -= 1
         return friend_map
 
+    def is_friend(this):
+        elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
+        html_string = ""
+        for elem in elements:
+            html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
+        return not "FriendRequestAdd addButton" in html_string
+
+
 
 
 if __name__ == '__main__':
