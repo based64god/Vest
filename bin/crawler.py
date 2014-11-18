@@ -103,7 +103,7 @@ class FBCrawler(object):
         html_string = ""
         for elem in elements:
             html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
-        return not "FriendRequestAdd addButton" in html_string
+        return not "Do you know" in html_string
 
 
 
@@ -128,19 +128,12 @@ if __name__ == '__main__':
         print ("[!] Error!")
         print ("[!] Failed to log in to Facebook with the username and password provided.")
         exit()
-        '''
-    elif depth == 1:
-        friend_list = get_friends(fb_id) #if login is sucessful then find the friends of the given facebook id
-        for f in friend_list:
-            print f
-        '''
     else:
         friend_map = crawler.crawl_to_depth(fb_id, depth)
         for key in friend_map.keys():
             print ("%s's friends:" %key)
             for _id in friend_map[key]:
                 print ("    %s" %_id)
-
 
     print ("")
     
