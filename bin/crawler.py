@@ -134,15 +134,7 @@ if __name__ == '__main__':
 
     #config
 
-    _username = str(raw_input("[+] Facebook Email: "))
-    _password = str(getpass.getpass("[+] Facebook Password (will not show): "))
-    crawler = FBCrawler(_username, _password)
 
-    fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person's friends you want to retrive: "))
-    depth = int(raw_input("[+] Depth do you want to scroll this id's friends (Enter 1 to simply output this id's friends): "))
-    
-    #driver = webdriver.Firefox()
-    
     #end conifg
     
     if not crawler.login():

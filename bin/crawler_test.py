@@ -12,7 +12,7 @@ def login():
 		return 0
 	else:
 		print "[!] SUCCESS -- Login successful"
-		return crawler
+		return _crawler
 
 
 def print_commands():
@@ -32,17 +32,42 @@ def print_commands():
 def list_functions():
 	pass
 
-def get_friends_test():
-	pass
+###################################
+###################################
 
-def crawl_test():
-	pass
+def get_friends_test(_crawler):
+	fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person's friends you want to retrive: "))
+	friend_list = _crawler.get_friends(fb_id)
+	print "%s's friends:" %fb_id
+	for f in friend_list:
+		print "    %s" %f
 
-def check_friend_test():
-	pass
+def crawl_test(_crawler):
+	fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person's friends you want to retrive: "))
+	depth = int(raw_input("[+] Depth do you want to scroll this id's friends: "))
+	friend_map = _crawler.crawl_to_depth(fb_id, depth)
+        for key in friend_map.keys():
+            print ("%s's friends:" %key)
+            for _id in friend_map[key]:
+                print ("    %s" %_id)
 
-def add_friend_test():
-	pass
+def check_friend_test(_crawler):
+	fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person you want to check: "))
+	_crawler.driver.get("https://www.facebook.com/%s/friends" %fb_id)
+	if _crawler.is_friend():
+		print "%s is friends with the crawler account" %fb_id
+	else:
+		print "%s is not friends with the crawler account" %fb_id
+
+	
+
+def add_friend_test(_crawler):
+	fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person you want to send a request to: "))
+	_crawler.driver.get("https://www.facebook.com/%s/friends" %fb_id)
+	if _crawler.add_friend():
+		print "A friend request has been sent to %s" %fb_id
+	else:
+		print "Unable to send request to %s, they may be already friends with the crawler account" %fb_id
 
 ###################################
 ###################################
@@ -64,15 +89,17 @@ if __name__ == "__main__":
 		if command == "-list":
 			list_functions()
 		elif command == "-get_friends":
-			get_friends_test()
+			get_friends_test(_crawler)
 		elif command == "-crawl":
-			crawl_test()
+			crawl_test(_crawler)
 		elif command == "-check_friend":
-			check_friend_test()
+			check_friend_test(_crawler)
 		elif command == "-add_friend":
-			add_friend_test()
+			add_friend_test(_crawler)
 		elif command == "-quit":
+			_crawler.quit()
 			break
+
 
 		
 
