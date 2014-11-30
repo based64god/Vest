@@ -125,6 +125,9 @@ class FBCrawler(object):
                 html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
             return "Friend Request Sent" in html_string
 
+    def quit(this):
+        this.driver.quit()
+
 
 
 if __name__ == '__main__':
