@@ -130,32 +130,5 @@ class FBCrawler(object):
 
 
 
-if __name__ == '__main__':
-
-    #config
-
-
-    #end conifg
-    
-    if not crawler.login():
-        print ("+" * 85)
-        print ("[!] Error!")
-        print ("[!] Failed to log in to Facebook with the username and password provided.")
-        exit()
-    else:
-        friend_map = crawler.crawl_to_depth(fb_id, depth)
-        for key in friend_map.keys():
-            print ("%s's friends:" %key)
-            for _id in friend_map[key]:
-                print ("    %s" %_id)
-
-    print ("")
-    
-    print ("")
-    print ("-" * 85)
-    print ("[+] All done...")
-
-
-
 
 		
