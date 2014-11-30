@@ -98,6 +98,7 @@ class FBCrawler(object):
             depth -= 1
         return friend_map
 
+    #checks to see if the crawler account is friends with the id who's friends its looking at
     def is_friend(this):
         elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
         html_string = ""
@@ -105,6 +106,24 @@ class FBCrawler(object):
             html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
         return not "Do you know" in html_string
 
+    #sends a friend request to the id who's friend page the crawler is currently looking at        
+    def add_friend(this):
+        try: #try to add the friend
+            button = this.driver.find_element_by_css_selector("._42ft._4jy0.FriendRequestAdd.addButton._4jy4._517h._9c6");
+            button.send_keys("\n")
+            #refreshes the page to test if the request was sent
+            this.driver.refresh()
+            time.sleep(.5)
+            this.driver.execute_script("window.scrollBy(0, 3000);")
+            time.sleep(.5)
+
+        finally:
+            #now check if the friend request was sent
+            elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
+            html_string = ""
+            for elem in elements:
+                html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
+            return "Friend Request Sent" in html_string
 
 
 
