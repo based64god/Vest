@@ -17,23 +17,24 @@ def login():
 
 def print_commands():
 	print "Here are the possible commands:"
-	print "		-list 		List functions of the FBCrawler"
-	print "		-get_friends 	List the friends of an id"
-	print "		-crawl 		Start at one id and crawl friends from there"
-	print "		-check_friend 	Check if an id is friends with the crawler account"
-	print "		-add_friend 	Send a friend request to the id from the crawler account"
-	print "		-quit 		Exit the FBCrawler test"
+	print "	-list 		List functions of the FBCrawler"
+	print "	-get_friends 	List the friends of an id"
+	print "	-crawl 		Start at one id and crawl friends from there"
+	print "	-check_friend 	Check if an id is friends with the crawler account"
+	print "	-add_friend 	Send a friend request to the id from the crawler account"
+	print "	-quit 		Exit the FBCrawler test"
 
-
-###################################
-#	Tests not yet implemented
-###################################
 
 def list_functions():
-	pass
+	print "Functions of the FBCrawler class"
+	print "	crawler.login()"
+	print "	crawler.get_friends()"
+	print "	crawler.parse_fb_friend_page()"
+	print "	crawler.crawl_to_depth()"
+	print "	crawler.is_friend()"
+	print "	crawler.add_friend()"
+	print "	crawler.quit()"
 
-###################################
-###################################
 
 def get_friends_test(_crawler):
 	fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person's friends you want to retrive: "))
@@ -41,6 +42,7 @@ def get_friends_test(_crawler):
 	print "%s's friends:" %fb_id
 	for f in friend_list:
 		print "    %s" %f
+
 
 def crawl_test(_crawler):
 	fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person's friends you want to retrive: "))
@@ -51,6 +53,7 @@ def crawl_test(_crawler):
             for _id in friend_map[key]:
                 print ("    %s" %_id)
 
+
 def check_friend_test(_crawler):
 	fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person you want to check: "))
 	_crawler.driver.get("https://www.facebook.com/%s/friends" %fb_id)
@@ -59,7 +62,6 @@ def check_friend_test(_crawler):
 	else:
 		print "%s is not friends with the crawler account" %fb_id
 
-	
 
 def add_friend_test(_crawler):
 	fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person you want to send a request to: "))
@@ -69,8 +71,10 @@ def add_friend_test(_crawler):
 	else:
 		print "Unable to send request to %s, they may be already friends with the crawler account" %fb_id
 
+
 ###################################
 ###################################
+
 
 if __name__ == "__main__":
 	print "Welcome to the FBCrawler test!"
@@ -83,8 +87,8 @@ if __name__ == "__main__":
 			sys.exit()
 		else:
 			_crawler = login()
-	print_commands()
 	while True:
+		print_commands()
 		command = raw_input("Please enter a command: ")
 		if command == "-list":
 			list_functions()
@@ -99,9 +103,4 @@ if __name__ == "__main__":
 		elif command == "-quit":
 			_crawler.quit()
 			break
-
-
-		
-
-
 
