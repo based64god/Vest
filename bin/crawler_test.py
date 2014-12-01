@@ -27,13 +27,13 @@ def print_commands():
 
 def list_functions():
 	print "Functions of the FBCrawler class"
-	print "	crawler.login()"
-	print "	crawler.get_friends()"
-	print "	crawler.parse_fb_friend_page()"
-	print "	crawler.crawl_to_depth()"
-	print "	crawler.is_friend()"
-	print "	crawler.add_friend()"
-	print "	crawler.quit()"
+	print "	crawler.login() 		-Logs into Facebook with the information provided "
+	print "	crawler.get_friends() 		-Opens friend page of an id and scrolls down it; returns the id's that are friends with the original id"
+	print "	crawler.parse_fb_friend_page() 	-Helper function for get_friends(), parses html string to return the ids on the page"
+	print "	crawler.crawl_to_depth() 	-Performs the crawling functionality, getting the friends of all of the ids in a queue; returns a dictionary mapping an id to a list of its friends"
+	print "	crawler.is_friend() 		-Checks if the id the crawler is looking at is a friend of the crawler account"
+	print "	crawler.add_friend() 		-Sends a friend request to the id the crawler is currently looking at"
+	print "	crawler.quit()		 	-Closes the browser the crawler was using"
 
 
 def get_friends_test(_crawler):
