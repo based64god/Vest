@@ -69,10 +69,14 @@ class FBCrawler(object):
         for i in range(len(text)):
             if(text[i:i+8] == '<a href='): #look for links and add the id the link points to
                 j = i
-                while(j < len(text) and text[j] != '?' ):
+                while(j < len(text) and text[j] != '>' ):
                     j = j + 1
-                if( not '/' in text[i+34:j] and not '.php' in text[i+34:j]):
-                    friends.append(text[i+34:j])
+                if 'friends_tab' in text[i:j]:
+                    k = i
+                    while(k < len(text) and text[k] != '?'):
+                        k = k + 1
+                    if text[i+34:k] != 'profile.php':
+                        friends.append(text[i+34:k])
         
         print ("[!] Done parsing")
         return friends
