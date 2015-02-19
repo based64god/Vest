@@ -34,9 +34,10 @@ class FBCrawler(object):
 
         time.sleep(5)
 
-        return not "UIPage_LoggedOut" in this.driver.page_source #"UIPage_LoggedOut" will be in the html of the page if the user is not logged in
-                                                            #it should not appear here unless the login is unsuccessful, which will cause 
-                                                            #the function to return false
+        return not "UIPage_LoggedOut" in this.driver.page_source 
+            #"UIPage_LoggedOut" will be in the html of the page if the user is not logged in
+            #it should not appear here unless the login is unsuccessful, which will cause 
+            #the function to return false
 
 
         #scrolls down the friend page of a given id that the user account is friends with
@@ -44,21 +45,20 @@ class FBCrawler(object):
     def get_friends(this, fb_id):
         print ("[!] loading friends...")
         this.driver.get("https://www.facebook.com/%s/friends" %fb_id) #load the page
-
-                            #scroll down the page
-        scroll_downs = 100 #arbitrary number of pagedowns, might need to be increased
-        while scroll_downs > 0:
-            time.sleep(.5)
+        
+        html_old = "."
+        html_new = ""    
+        while html_new != html_old:
+            html_old = html_new
+            html_new = ""
             this.driver.execute_script("window.scrollBy(0, 3000);")
-            scroll_downs -= 1
-
-        elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
-        html_string = ""
-        for elem in elements:
-            html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
+            time.sleep(1)
+            elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
+            for elem in elements:
+                html_new += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
 
         print ("[!] Done loading")
-        return this.parse_fb_friend_page(html_string)
+        return this.parse_fb_friend_page(html_new)
 
 
         #takes html text of friends page
