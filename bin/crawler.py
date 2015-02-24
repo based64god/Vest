@@ -45,7 +45,7 @@ class FBCrawler(object):
         #This function now runs though all of the pages and parses them to find all of the friends they contain
         #Input: an fb_id
         #Returns: a list of the id's friends
-        #Joseph helped with this
+        #Joseph helped with this, but Paul wrote it
     def get_friends(this, fb_id):
         print ("[!] loading friends...")
         this.driver.get("m.facebook.com/%s?v=friends" %fb_id) #load the page
