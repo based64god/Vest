@@ -34,47 +34,75 @@ class FBCrawler(object):
 
         time.sleep(5)
 
-        return not "UIPage_LoggedOut" in this.driver.page_source #"UIPage_LoggedOut" will be in the html of the page if the user is not logged in
-                                                            #it should not appear here unless the login is unsuccessful, which will cause 
-                                                            #the function to return false
+        return not "UIPage_LoggedOut" in this.driver.page_source 
+            #"UIPage_LoggedOut" will be in the html of the page if the user is not logged in
+            #it should not appear here unless the login is unsuccessful, which will cause 
+            #the function to return false
 
 
-        #scrolls down the friend page of a given id that the user account is friends with
-        #returns text of the html of the page
+        #This function used to scroll down the page to get all of a person's friends
+        #It has since been changed to use the mobile fb site which loads friend lists as a series of pages
+        #This function now runs though all of the pages and parses them to find all of the friends they contain
+        #Input: an fb_id
+        #Returns: a list of the id's friends
+        #Joseph helped with this, but Paul wrote it
     def get_friends(this, fb_id):
         print ("[!] loading friends...")
-        this.driver.get("https://www.facebook.com/%s/friends" %fb_id) #load the page
-
-                            #scroll down the page
-        scroll_downs = 100 #arbitrary number of pagedowns, might need to be increased
-        while scroll_downs > 0:
-            time.sleep(.5)
-            this.driver.execute_script("window.scrollBy(0, 3000);")
-            scroll_downs -= 1
-
+        this.driver.get("m.facebook.com/%s?v=friends" %fb_id) #load the page
+        friends = []
+        #get the source of the page so we can parse it
+        page_src = ""
         elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
-        html_string = ""
         for elem in elements:
-            html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
-
+            page_src += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
+        #we need to determine how many friends the person has so we find it when we parse the first time
+        num_friends_str = ""
+        for i in range(len(page_src)):
+            if page_src[i:i+9] == "Friends (":
+                j = i
+                while page_src[j] != ')':
+                    j = j + 1
+                num_friends_str = page_src[i+9:j]
+                break
+        num_friends_int = int(num_friends_str.replace(",","")) #turn the string that contains the number of friends into an int
+        #print num_friends_int
+        page_src = ""
+        n = 0 #counter to hold the start of the range of friends we are looking at
+        while n < num_friends_int:
+            elements = this.driver.find_elements_by_tag_name('body') #get the source of the page again
+            for elem in elements:                           
+                page_src += elem.get_attribute('innerHTML')
+            friends.extend(this.parse_fb_friend_page(page_src)) #parse each page to get the friends on it
+            page_src = "" 
+            if n == 0: #for some first page only shows 24 friends and the rest show 36, this accounts for that
+                n = 24
+            else:
+                n = n + 36
+            this.driver.get("https://m.facebook.com/%s?v=friends&mutual&startindex=%d" %(fb_id,n)) 
+            #load the next page containing the person's friends, 
+                #startindex=%d picks the range of friends (n to n+36) that will be shown
+            
         print ("[!] Done loading")
-        return this.parse_fb_friend_page(html_string)
+        #print "len(friends) = %d" %len(friends)
+        return friends
 
 
         #takes html text of friends page
         #returns list of strings of the id's of the person's friends
     def parse_fb_friend_page(this, text):
-        print ("[!] parsing...")
+        #print ("[!] parsing...")
         friends = []
         for i in range(len(text)):
             if(text[i:i+8] == '<a href='): #look for links and add the id the link points to
                 j = i
-                while(j < len(text) and text[j] != '?' ):
+                while(j < len(text) and text[j] != '>' ):
                     j = j + 1
-                if( not '/' in text[i+34:j] and not '.php' in text[i+34:j]):
-                    friends.append(text[i+34:j])
-        
-        print ("[!] Done parsing")
+                if 'fr_tab' in text[i:j] and not 'profile.php' in text[i:j]:
+                    k = i
+                    while(k < len(text) and text[k] != '?'):
+                        k = k + 1
+                    friends.append(text[i+10:k])
+
         return friends
 
 
