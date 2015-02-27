@@ -4,22 +4,39 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 class FBCrawler(object):
-    """
-    The Crawler class will move from page to page scraping data. The original purpose of this
-    class will be to scroll down facebook friend pages to load all of their content and to then
-    parse the cource of the page to return the friends of a certain id.
 
-    """
-    def __init__(self, username, password):
+    
+    def __init__(self, username, password): # -------------------------------------------------------------------------
+
+        '''
+        The Crawler class will move from page to page scraping data. The original purpose of this
+        class will be to scroll down Facebook friend pages to load all of their content and to then
+        parse the cource of the page to return the friends of a certain id.
+
+        '''
+
         self.username = username
         self.password = password
         self.driver = webdriver.Firefox()
 
 
+    def login(this): # ------------------------------------------------------------------------------------------------
 
-        #logs into facebook using the username and password given when the object is created
-        #returns true if the login is successful, false if not
-    def login(this):
+        '''
+        Parameters
+        ----------
+        None
+
+        Function
+        --------
+        Logs into Facebook using the username and password given when object is created
+
+        Returns
+        -------
+        True - login was successful
+        False - not able to log in
+        '''
+
         global facebook_id
         print ("[!] Logging in.")
 
@@ -40,13 +57,23 @@ class FBCrawler(object):
             #the function to return false
 
 
-        #This function used to scroll down the page to get all of a person's friends
-        #It has since been changed to use the mobile fb site which loads friend lists as a series of pages
-        #This function now runs though all of the pages and parses them to find all of the friends they contain
-        #Input: an fb_id
-        #Returns: a list of the id's friends
-        #Joseph helped with this, but Paul wrote it
-    def get_friends(this, fb_id):
+    def get_friends(this, fb_id): # -----------------------------------------------------------------------------------
+
+        '''
+        Parameters
+        ----------
+        fb_id - string
+            A user's Facebook ID
+
+        Function
+        --------
+        Uses the Facebook mobile site (m.facebook.com) to page through a user's friends and parse their IDs
+
+        Returns
+        -------
+        List of the IDs of the given user's friends
+        '''
+
         print ("[!] loading friends...")
         this.driver.get("m.facebook.com/%s?v=friends" %fb_id) #load the page
         friends = []
@@ -87,9 +114,23 @@ class FBCrawler(object):
         return friends
 
 
-        #takes html text of friends page
-        #returns list of strings of the id's of the person's friends
-    def parse_fb_friend_page(this, text):
+    def parse_fb_friend_page(this, text): # ---------------------------------------------------------------------------
+
+        '''
+        Parameters
+        ----------
+        test - string
+            HTML of a user's page
+
+        Function
+        --------
+        Parses user's friends from HTML
+
+        Returns
+        -------
+        List of the IDs of given user's friends
+        '''
+
         #print ("[!] parsing...")
         friends = []
         for i in range(len(text)):
@@ -106,11 +147,25 @@ class FBCrawler(object):
         return friends
 
 
-        #main crawling function of the class
-        #start_id is the string of the id we start crawling from
-        #depth is an integer indicating how far the crawler should crawl, is decremented as we crawl each depth
-        #returns map containing data, map will link a string of an id to a list of all of the id's friends
-    def crawl_to_depth(this, start_id, depth):
+    def crawl_to_depth(this, start_id, depth): # ----------------------------------------------------------------------
+
+        '''
+        Parameters
+        ----------
+        start_id - string
+            ID that crawling begins from
+        depth - integer
+            How far the crawler should crawl
+
+        Function
+        --------
+        Recursively crawls from given start_id to given depth
+
+        Returns
+        -------
+        Map linking string of an ID to a list of that ID's friends
+        '''
+
         friend_map = {}
         queue = this.get_friends(start_id)
         friend_map[start_id] = queue
@@ -126,16 +181,49 @@ class FBCrawler(object):
             depth -= 1
         return friend_map
 
-    #checks to see if the crawler account is friends with the id who's friends its looking at
-    def is_friend(this):
+
+    def is_friend(this): # --------------------------------------------------------------------------------------------
+
+        '''
+        Parameters
+        ----------
+        None
+
+        Function
+        --------
+        Checks if crawler account is friends with the ID whose friends its crawling
+
+        Returns
+        -------
+        True - crawler is friends with ID
+        False - crawler is not friends with ID
+        '''
+
         elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
         html_string = ""
         for elem in elements:
             html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
         return not "Do you know" in html_string
 
-    #sends a friend request to the id who's friend page the crawler is currently looking at        
-    def add_friend(this):
+
+    def add_friend(this): # -------------------------------------------------------------------------------------------
+
+        '''
+        Parameters
+        ----------
+        None
+
+        Function
+        --------
+        Send a friend request to the ID crawler is currently crawling
+        (Doing so allows access to that ID's friend list)
+
+        Returns
+        -------
+        True - friend request sent
+        False - friend request failed
+        '''     
+
         try: #try to add the friend
             button = this.driver.find_element_by_css_selector("._42ft._4jy0.FriendRequestAdd.addButton._4jy4._517h._9c6");
             button.send_keys("\n")
@@ -153,10 +241,22 @@ class FBCrawler(object):
                 html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
             return "Friend Request Sent" in html_string
 
-    def quit(this):
+
+    def quit(this): # -------------------------------------------------------------------------------------------------
+
+        '''
+        Parameters
+        ----------
+        None
+
+        Function
+        --------
+        Quits the Firefox webdriver
+
+        Returns
+        -------
+        None
+        '''
+
         this.driver.quit()
 
-
-
-
-		
