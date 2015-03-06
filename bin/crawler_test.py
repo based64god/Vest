@@ -22,7 +22,9 @@ def print_commands():
 	print "	-crawl 		Start at one id and crawl friends from there"
 	print "	-check_friend 	Check if an id is friends with the crawler account"
 	print "	-add_friend 	Send a friend request to the id from the crawler account"
+	print "	-remove_friend 	Remove a friend or cancel a friend request"
 	print "	-quit 		Exit the FBCrawler test"
+
 
 
 def list_functions():
@@ -71,6 +73,12 @@ def add_friend_test(_crawler):
 	else:
 		print "Unable to send request to %s, they may be already friends with the crawler account" %fb_id
 
+def remove_friend_or_cancel_request_test(_crawler):
+	fb_id = str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person you want to send a request to: "))
+	_crawler.remove_friend_or_cancel_request(fb_id)
+	print "friend request cancelled/friend removed"
+
+
 
 ###################################
 ###################################
@@ -100,6 +108,8 @@ if __name__ == "__main__":
 			check_friend_test(_crawler)
 		elif command == "-add_friend":
 			add_friend_test(_crawler)
+		elif command == "-remove_friend":
+			remove_friend_or_cancel_request_test(_crawler)
 		elif command == "-quit":
 			_crawler.quit()
 			break

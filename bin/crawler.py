@@ -241,6 +241,34 @@ class FBCrawler(object):
                 html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
             return "Friend Request Sent" in html_string
 
+    def remove_friend_or_cancel_request(this, fb_id):
+        this.driver.get("m.facebook.com/%s" %fb_id)
+        elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
+        html_string = ""
+        for elem in elements:
+            html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
+            link_index = html_string.find('<a href="/a/friendrequest/cancel/?subject_id=')
+        if link_index != -1:
+            link_index = link_index + 10
+            end_index = link_index
+            while html_string[end_index] != '"':
+                end_index = end_index + 1
+            this.driver.get("m.facebook.com/%s" %html_string[link_index:end_index])
+            return
+        link_index = html_string.find('<a href="/removefriend.php?friend_id=')
+        if link_index != -1:
+            link_index = link_index + 10
+            end_index = link_index
+            while html_string[end_index] != '"':
+                end_index = end_index + 1
+            this.driver.get("m.facebook.com/%s" %html_string[link_index:end_index])
+            return
+
+
+
+
+
+
 
     def quit(this): # -------------------------------------------------------------------------------------------------
 
