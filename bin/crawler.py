@@ -134,7 +134,8 @@ class FBCrawler(object):
         #print ("[!] parsing...")
         friends = []
         for i in range(len(text)):
-            if(text[i:i+8] == '<a href='): #look for links and add the id the link points to
+            if(text[i:i+9] == '<a class='): #look for links and add the id the link points to
+            #if(text[i:i+8] == '<a href='): #look for links and add the id the link points to
                 j = i
                 while(j < len(text) and text[j] != '>' ):
                     j = j + 1
@@ -142,7 +143,7 @@ class FBCrawler(object):
                     k = i
                     while(k < len(text) and text[k] != '?'):
                         k = k + 1
-                    friends.append(text[i+10:k])
+                    friends.append(text[i+21:k])
 
         return friends
 
@@ -241,7 +242,22 @@ class FBCrawler(object):
                 html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
             return "Friend Request Sent" in html_string
 
-    def remove_friend_or_cancel_request(this, fb_id):
+    def remove_friend_or_cancel_request(this, fb_id): #-------------------------------------------------------------------
+
+        '''
+        Parameters
+        ----------
+        An id to remove from the crawlers friends
+
+        Function
+        --------
+        Remove a friend or cancle a sent request so the crawler can stay under the friend limit
+
+        Returns
+        -------
+        None
+        '''    
+
         this.driver.get("m.facebook.com/%s" %fb_id)
         elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
         html_string = ""
@@ -263,12 +279,6 @@ class FBCrawler(object):
                 end_index = end_index + 1
             this.driver.get("m.facebook.com/%s" %html_string[link_index:end_index])
             return
-
-
-
-
-
-
 
     def quit(this): # -------------------------------------------------------------------------------------------------
 
