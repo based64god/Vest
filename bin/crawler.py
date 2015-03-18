@@ -74,7 +74,7 @@ class FBCrawler(object):
         List of the IDs of the given user's friends
         '''
 
-        print ("[!] loading friends...")
+        #print ("[!] loading friends...")
         this.driver.get("m.facebook.com/%s?v=friends" %fb_id) #load the page
         friends = []
         #get the source of the page so we can parse it
@@ -109,7 +109,7 @@ class FBCrawler(object):
             #load the next page containing the person's friends, 
                 #startindex=%d picks the range of friends (n to n+36) that will be shown
             
-        print ("[!] Done loading")
+        #print ("[!] Done loading")
         #print "len(friends) = %d" %len(friends)
         return friends
 
@@ -180,6 +180,28 @@ class FBCrawler(object):
                             queue.append(f) #we dont need to remove from the queue because we will only iterate
                                             #over it once to view everyone reachable at that depth
             depth -= 1
+        return friend_map
+
+    def get_friends_list(this, id_list): # ----------------------------------------------------------------------
+
+        '''
+        Parameters
+        ----------
+        id_list - list of strings
+            list of strings to get friends for
+
+        Function
+        --------
+        Get the friends for each id in a list
+
+        Returns
+        -------
+        Map linking string of an ID to a list of that ID's friends
+        '''
+
+        friend_map = {}
+        for _id in id_list:
+            friend_map[_id] = this.get_friends(_id)
         return friend_map
 
 
@@ -297,4 +319,13 @@ class FBCrawler(object):
         '''
 
         this.driver.quit()
+
+if __name__ == "__main__":
+    print 
+    print "[!] This class has no main"
+    print "[!] Use main.py to run or use crawler_test.py to use the functions"
+    print "[!] Exiting ..."
+    print
+
+
 

@@ -17,13 +17,14 @@ def login():
 
 def print_commands():
 	print "Here are the possible commands:"
-	print "	-list 		List functions of the FBCrawler"
-	print "	-get_friends 	List the friends of an id"
-	print "	-crawl 		Start at one id and crawl friends from there"
-	print "	-check_friend 	Check if an id is friends with the crawler account"
-	print "	-add_friend 	Send a friend request to the id from the crawler account"
-	print "	-remove_friend 	Remove a friend or cancel a friend request"
-	print "	-quit 		Exit the FBCrawler test"
+	print "	-list 			List functions of the FBCrawler"
+	print "	-get_friends 		List the friends of an id"
+	print "	-get_friends_list 	List the friends for a list of id's"
+	print "	-crawl 			Start at one id and crawl friends from there"
+	print "	-check_friend 		Check if an id is friends with the crawler account"
+	print "	-add_friend 		Send a friend request to the id from the crawler account"
+	print "	-remove_friend 		Remove a friend or cancel a friend request"
+	print "	-quit 			Exit the FBCrawler test"
 
 
 
@@ -31,6 +32,7 @@ def list_functions():
 	print "Functions of the FBCrawler class"
 	print "	crawler.login() 		-Logs into Facebook with the information provided "
 	print "	crawler.get_friends() 		-Opens friend page of an id and scrolls down it; returns the id's that are friends with the original id"
+	print "	crawler.get_friends_list() 	-Calls get_friends for a list of friends and returns an map with keys as the id's provided and the values being their friend lists"
 	print "	crawler.parse_fb_friend_page() 	-Helper function for get_friends(), parses html string to return the ids on the page"
 	print "	crawler.crawl_to_depth() 	-Performs the crawling functionality, getting the friends of all of the ids in a queue; returns a dictionary mapping an id to a list of its friends"
 	print "	crawler.is_friend() 		-Checks if the id the crawler is looking at is a friend of the crawler account"
@@ -44,6 +46,21 @@ def get_friends_test(_crawler):
 	print "%s's friends:" %fb_id
 	for f in friend_list:
 		print "    %s" %f
+
+def get_friends_list_test(_crawler):
+	list_len = int(raw_input("[+] Enter the number of id's in the list: "))
+	count = 1
+	id_list = []
+	while count <= list_len:
+		id_list.append(str(raw_input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) #%d: " %count)))
+		count += 1
+	friend_map = _crawler.get_friends_list(id_list)
+	print
+	for _id in id_list:
+		print "%s's friends:" %_id
+		for f in friend_map[_id]:
+			print "    %s" %f	
+		print
 
 
 def crawl_test(_crawler):
@@ -102,6 +119,8 @@ if __name__ == "__main__":
 			list_functions()
 		elif command == "-get_friends":
 			get_friends_test(_crawler)
+		elif command == "-get_friends_list":
+			get_friends_list_test(_crawler)
 		elif command == "-crawl":
 			crawl_test(_crawler)
 		elif command == "-check_friend":
