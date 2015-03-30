@@ -322,9 +322,9 @@ class FBCrawler(object):
 
 if __name__ == "__main__":
     print 
-    print "[!] This class has no main"
-    print "[!] Use main.py to run or use crawler_test.py to use the functions"
-    print "[!] Exiting ..."
+    print ("[!] This class has no main")
+    print ("[!] Use main.py to run or use crawler_test.py to use the functions")
+    print ("[!] Exiting ...")
     print
 
 
