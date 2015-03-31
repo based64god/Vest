@@ -36,8 +36,7 @@ class FBCrawler(object):
         True - login was successful
         False - not able to log in
         '''
-
-        global facebook_id
+        
         print ("[!] Logging in.")
 
         this.driver.get("https://www.facebook.com/")
