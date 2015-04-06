@@ -7,70 +7,95 @@ from analyze import *
 
 if __name__=="__main__":
 	# runs on python 3.4 or later
-	# -crawler flags: -pr to crawl public records, -fb to crawl facebook
-	# -db flags: -d for full table dump, -a for raw stats, -p to make predictions
-	print ("Vest v0.1: \nOptions: -crawler, -db (requires a path to save the database)\nFlags implemented for -crawler:\nFlags implemented for -data:\n")
-	inputText=input("Enter a command:\n").strip().lower().replace("  ","")
-	#print (inputText)
 
-	inputArgs=inputText.split(" ")
+	print ("Welcome to Vest v0.1: ")
+	print ()
+	while True:
 
-	if (inputArgs[0]=="-crawler" and len(inputArgs)==2):
+		print ("Options:")
+		print ("	-crawler 	use the crawler to gather data and analyze")
+		print ("	-db 		use data from the database and analyze")
+		print ("	-q 		quit")
 
-		if (inputArgs[1]=="-pr"):
-			#crawler.crawlPR()
-			pass
+		command = str(input("Enter a command: ").strip().lower().replace("  ",""))
 
-		elif (inputArgs[1]=="-fb"):
+		if command == "-crawler":
+
+			save_yn = str(input("[?] would you like to save the data collected to the database (y/n)?: "))
+
+			print ("[!] To collect data using the crawler please log into Facebook below")
+
 			_username = str(input("[+] Facebook Email: "))
 			_password = str(getpass.getpass("[+] Facebook Password (will not show): "))
 
 			_crawler = crawler.FBCrawler(_username, _password)
 			
 			if _crawler.login():
-				list_len = int(input("[+] Enter the number of id's in the list: "))
-				count = 1
-				id_list = []
-				while count <= list_len:
-					id_list.append(str(input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) #%d: " %count)))
-					count += 1
-				friend_map = _crawler.get_friends_list(id_list)
-				print ("[!] Friend map generated")
-				print ("[!] Analyzing")
-				ranks = unweighted_ranking(friend_map)
-				for level in range(len(ranks))[::-1]:
-					print ("ids at risk level %d" %level)
-					for _id in ranks[level]:
-						print ("	%s" %_id )
-				_crawler.quit()
+				while True:
+					#The crawler finds the friends associated with a list of ids.
+					#The ids are entered in the form of a list
+					
+					print ("[!] Please enter the ids to find friends for, we need the number of ids first")
+					list_len = int(input("[+] Enter the number of id's in the list: "))
+					count = 1
+					id_list = []
+					while count <= list_len:
+						id_list.append(str(input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) #%d: " %count)))
+						count += 1
+					friend_map = _crawler.get_friends_list(id_list)
+					print ("[!] Friend map generated")
+
+					#if save_yn == "y":
+					#	* save data into database *
+					#	print("[!] Data saved into database")
+
+					analyze_yn = str(input("[?] Would you like to analyze the data (y/n)?: "))
+					if analyze_yn == "y":
+						print ("[!] Analyzing")
+						ranks = unweighted_ranking(friend_map)
+						for level in range(1,len(ranks))[::-1]:
+							print ("Ids at risk level %d:" %level)
+							for _id in ranks[level]:
+								print ("	%s" %_id )
+					continue_yn = str(input("[?] Would you like to gather more data (y/n)?: "))
+					if continue_yn == "n":
+						print ("[!] Exiting the crawler")
+						_crawler.quit()
+						sys.exit()
+
 			else:	
 				print ("[!] Error loging in")
 
-		else:
-			print ("Invalid crawler flags")
+		elif command == "-db":
+			pass
+
+		elif command == "-q":
 			sys.exit()
 
-'''
-    elif (inputArgs[0]=="-db" and len(inputArgs)==3):
-    	db=Database()
+		else:
+			print ("Invalid command")
 
-		if (inputArgs[1]=="-d"):
-			db.dump()
+		'''
+	    elif (inputArgs[0]=="-db" and len(inputArgs)==3):
+	    	db=Database()
 
-		elif (inputArgs[1]=="-a"):
-			db.stats()
+			if (inputArgs[1]=="-d"):
+				db.dump()
 
-		elif (inputArgs[1]=="-p"):
-			db.predict()
+			elif (inputArgs[1]=="-a"):
+				db.stats()
+
+			elif (inputArgs[1]=="-p"):
+				db.predict()
+
+			else:
+				print ("Invalid db flags")
+				sys.exit()
+
 
 		else:
-			print ("Invalid db flags")
+			print ("Invalid options")
 			sys.exit()
-
-
-	else:
-		print ("Invalid options")
-		sys.exit()
 		'''
 
 
