@@ -301,6 +301,29 @@ class FBCrawler(object):
             this.driver.get("m.facebook.com/%s" %html_string[link_index:end_index])
             return
 
+    def get_name(this, fb_id):
+
+        '''
+        Parameters
+        ----------
+        fb_id - string
+            A user's ID
+
+        Function
+        --------
+        Find the full name of the user with the given ID
+
+        Returns
+        -------
+        String containing user's full name
+        '''
+
+        this.driver.get("facebook.com/%s" %fb_id)
+
+        elem = this.driver.find_element_by_id("fb-timeline-cover-name")
+
+        return elem.text
+
     def quit(this): # -------------------------------------------------------------------------------------------------
 
         '''

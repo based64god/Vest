@@ -24,6 +24,7 @@ def print_commands():
 	print ("	-check_friend 		Check if an id is friends with the crawler account")
 	print ("	-add_friend 		Send a friend request to the id from the crawler account")
 	print ("	-remove_friend 		Remove a friend or cancel a friend request")
+	print ("	-get_name			Get the full name of a user from their id")
 	print ("	-quit 			Exit the FBCrawler test")
 
 
@@ -95,7 +96,10 @@ def remove_friend_or_cancel_request_test(_crawler):
 	_crawler.remove_friend_or_cancel_request(fb_id)
 	print ("friend request cancelled/friend removed")
 
-
+def get_name_test(_crawler):
+	fb_id = str(input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person you want to get the full name of: "))
+	name = _crawler.get_name(fb_id)
+	print (name)
 
 ###################################
 ###################################
@@ -129,6 +133,8 @@ if __name__ == "__main__":
 			add_friend_test(_crawler)
 		elif command == "-remove_friend":
 			remove_friend_or_cancel_request_test(_crawler)
+		elif command == "-get_name":
+			get_name_test(_crawler)
 		elif command == "-quit":
 			_crawler.quit()
 			break
