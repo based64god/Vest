@@ -2,82 +2,111 @@ import sqlite3
 
 class Database:
 	def __init__(self, path):
+
+		'''
+		Parameters
+        ----------
+        A path leading to the location where the database will exist
+
+        Function
+        --------
+        Initializes the Database with a facebook table
+
+        Returns
+        -------
+        None
+		'''
+
 		self.db= sqlite3.connect(path)
 		self.cursor=self.db.cursor()
-		self.cursor.execute('CREATE TABLE facebook(fbID TEXT PRIMARY KEY, location TEXT, friendWith TEXT, friendOf TEXT)')
-		self.cursor.execute('CREATE TABLE google(gpID TEXT, location TEXT, friendWith TEXT, friendOf TEXT, FOREIGN KEY(gpID) REFERENCES facbook(fbID))')
-		self.cursor.execute('CREATE TABLE twitter(twID TEXT, location TEXT, friendWith TEXT, friendOf TEXT), FOREIGN KEY(twID) REFERENCES facbook(fbID)')
-		self.cursor.execute('CREATE TABLE instagram(igID TEXT, location TEXT, friendWith TEXT, friendOf TEXT), FOREIGN KEY(igID) REFERENCES facbook(fbID)')
-
+		self.cursor.execute('CREATE TABLE if not exists facebook(id TEXT PRIMARY KEY, friends TEXT)')
 		self.db.commit() 
 
 	def close(self):
+		'''
+		Parameters
+        ----------
+        None
+
+        Function
+        --------
+        Closes the database
+
+        Returns
+        -------
+        None
+		'''
 		self.db.close()
 		
 
-	def addTable(self, tableName):
-		if (tableName.toLower()=="facebook"):
-			self.cursor.execute('CREATE TABLE facebook(userID TEXT PRIMARY KEY, location TEXT, friendWith TEXT, friendOf TEXT)')
-		else:
-			if (tableName.toLower()=="google"):
-				self.cursor.execute('CREATE TABLE google(userID TEXT, location TEXT, friendWith TEXT, friendOf TEXT, FOREIGN KEY(gpID) REFERENCES facebook(fbID))')
-			if (tableName.toLower()=="twitter"):
-				self.cursor.execute('CREATE TABLE twitter(userID TEXT, location TEXT, friendWith TEXT, friendOf TEXT, FOREIGN KEY(twID) REFERENCES facebook(fbID))')
-			if (tableName.toLower()=="instagram"):
-				self.cursor.execute('CREATE TABLE instagram(userID TEXT, location TEXT, friendWith TEXT, friendOf TEXT, FOREIGN KEY(igID) REFERENCES facebook(fbID))')
-		self.db.commit() 
-		
-
-	def dropTable(self, tableName):
-		if (tableName.toLower()=="facebook"):
-			self.cursor.execute('DROP TABLE facebook')
-		elif (tableName.toLower()=="google"):
-			self.cursor.execute('DROP TABLE google')
-		elif (tableName.toLower()=="twitter"):
-			self.cursor.execute('DROP TABLE twitter')
-		elif (tableName.toLower()=="instagram"):
-			self.cursor.execute('DROP TABLE instagram')
-		self.db.commit()
-		
-
-	def dumpTable(self, tableName):
-		if (tableName.toLower()=="facebook"):
-			self.cursor.execute('SELECT fbID, location, friendWith, friendOf FROM facebook')
-		elif (tableName.toLower()=="google"):
-			self.cursor.execute('SELECT gpID, location, friendWith, friendOf FROM google')
-		elif (tableName.toLower()=="twitter"):
-			self.cursor.execute('SELECT twID, location, friendWith, friendOf FROM twitter')
-		elif (tableName.toLower()=="instagram"):
-			self.cursor.execute('SELECT igID, location, friendWith, friendOf FROM instagram')
-		all_rows = self.cursor.fetchall()
-		for row in all_rows:
-			print('{0} : {1}'.format(row[0], row[1]))
-			print('Forward friends (following): '.format(row[2]))
-			print('Backward friends (followers):'.format(row[3]))
-
-	def stats(self, tableName):
-		print('stats for',tableName,'currently not yet implemented')
+	def dumpTable(self):
+		#not yet implemented
+		pass
 
 
-	def predict(self, tableName):
-		print('predictions for',tableName,'currently not yet implemented')
+	def insert_friends_to_db(self, _id, friends):
+
+		'''
+		Parameters
+        ----------
+        _id - a string containing a facebook id
+        friends - a list of strings containing the ids that are friends with _id
+
+        Function
+        --------
+        Add the _id and its corresponding friends to the database
+
+        Returns
+        -------
+        True - if the id and friends are added
+        False - if the id and friends are not added
+		'''
+
+		if type(friends) is list:
+			friends_str = ' '.join(friends)
+			#print (friends_str)
+		try:
+			params = (_id, friends_str)
+			self.cursor.execute('INSERT INTO facebook VALUES(?, ?)', params )
+			self.db.commit()
+			return True
+		except sqlite3.IntegrityError as err:
+			return False
 
 
-	def insert(self, tableName, location, friendWith, friendOf):
-		if type(friendOf) is list:
-			friendOf.join(', ')
-		if type(friendWith) is list:
-			friendWith.join(', ')
-		if (tableName.toLower()=="facebook"):
-			self.cursor.execute('SELECT fbID, location, friendWith, friendOf FROM facebook')
-		elif (tableName.toLower()=="google"):
-			self.cursor.execute('SELECT gpID, location, friendWith, friendOf FROM google')
-		elif (tableName.toLower()=="twitter"):
-			self.cursor.execute('SELECT twID, location, friendWith, friendOf FROM twitter')
-		elif (tableName.toLower()=="instagram"):
-			self.cursor.execute('SELECT igID, location, friendWith, friendOf FROM instagram')
-		self.cursor.execute('INSERT INTO {0}(userID, location, friendWith, friendOf) VALUES(?,?,?,?,?)'.format(tableName), (userID,location, friendWithString, friendOfString))
+	def get_friends_from_db(self, _id):
+		'''
+		Parameters
+        ----------
+        _id - a string containing a facebook id to get the friends for
 
-		
+        Function
+        --------
+        Retreive the data from the database
+
+        Returns
+        -------
+        A list containing the friends associated with the id
+		'''
+
+		for row in self.cursor.execute('select * from facebook WHERE id=?', (_id,)):
+			column_str = str(row)
+			break
+		column_str = column_str.replace('(','').replace(')','').replace('\'','')
+		column_list = column_str.split(',')[1].split()
+		return column_list
+
+
+if __name__ == "__main__":
+	#test code
+	PATH = '' #insert path here
+	ID = '' #insert id here
+	FRIENDS = [] #put list of the person's friends here
+
+	db = Database(PATH)
+	print (db.insert_friends_to_db(ID, FRIENDS))
+	print (db.get_friends_from_db(ID))
+	db.close()
+
 
 
