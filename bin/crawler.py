@@ -74,6 +74,8 @@ class FBCrawler(object):
         '''
 
         #print ("[!] loading friends...")
+        if not this.is_friend(fb_id):
+            this.add_friend(fb_id)
         this.driver.get("m.facebook.com/%s?v=friends" %fb_id) #load the page
         friends = []
         #get the source of the page so we can parse it
