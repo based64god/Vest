@@ -204,12 +204,12 @@ class FBCrawler(object):
         return friend_map
 
 
-    def is_friend(this): # --------------------------------------------------------------------------------------------
+    def is_friend(this, fb_id): # --------------------------------------------------------------------------------------------
 
         '''
         Parameters
         ----------
-        None
+        fb_id - string containing the id we want check if the crawler is friends with
 
         Function
         --------
@@ -221,6 +221,7 @@ class FBCrawler(object):
         False - crawler is not friends with ID
         '''
 
+        this.driver.get("facebook.com/%s/friends" %fb_id)
         elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
         html_string = ""
         for elem in elements:
@@ -228,12 +229,12 @@ class FBCrawler(object):
         return not "Do you know" in html_string
 
 
-    def add_friend(this): # -------------------------------------------------------------------------------------------
+    def add_friend(this, fb_id): # -------------------------------------------------------------------------------------------
 
         '''
         Parameters
         ----------
-        None
+        fb_id - string containing the id we want to sent a friend request to
 
         Function
         --------
@@ -246,6 +247,7 @@ class FBCrawler(object):
         False - friend request failed
         '''     
 
+        this.driver.get("facebook.com/%s/friends" %fb_id)
         try: #try to add the friend
             button = this.driver.find_element_by_css_selector("._42ft._4jy0.FriendRequestAdd.addButton._4jy4._517h._9c6");
             button.send_keys("\n")
