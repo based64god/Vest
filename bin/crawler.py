@@ -73,7 +73,7 @@ class FBCrawler(object):
         List of the IDs of the given user's friends
         '''
 
-        #print ("[!] loading friends...")
+
         if not this.is_friend(fb_id):
             this.add_friend(fb_id)
         this.driver.get("m.facebook.com/%s?v=friends" %fb_id) #load the page
@@ -92,8 +92,14 @@ class FBCrawler(object):
                     j = j + 1
                 num_friends_str = page_src[i+9:j]
                 break
-        num_friends_int = int(num_friends_str.replace(",","")) #turn the string that contains the number of friends into an int
-        #print num_friends_int
+        #check if we were unable to find the number of friends for this id
+            #if we cant find the number of friends then  num_friends_str will be an empty string
+            #we dont have access to their friends so return and empty list for this person
+        if num_friends_str = '':
+            print ("[!] unable to get friends for %s" %fb_id)
+            return []
+        #if we can find the number of friends, turn the string that contains the number of friends into an int
+        num_friends_int = int(num_friends_str.replace(",","")) 
         page_src = ""
         n = 0 #counter to hold the start of the range of friends we are looking at
         while n < num_friends_int:
@@ -110,8 +116,7 @@ class FBCrawler(object):
             #load the next page containing the person's friends, 
                 #startindex=%d picks the range of friends (n to n+36) that will be shown
             
-        #print ("[!] Done loading")
-        #print "len(friends) = %d" %len(friends)
+
         return friends
 
 
@@ -132,7 +137,6 @@ class FBCrawler(object):
         List of the IDs of given user's friends
         '''
 
-        #print ("[!] parsing...")
         friends = []
         for i in range(len(text)):
             if(text[i:i+9] == '<a class='): #look for links and add the id the link points to
