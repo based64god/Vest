@@ -95,7 +95,7 @@ class FBCrawler(object):
         #check if we were unable to find the number of friends for this id
             #if we cant find the number of friends then  num_friends_str will be an empty string
             #we dont have access to their friends so return and empty list for this person
-        if num_friends_str = '':
+        if num_friends_str == '':
             print ("[!] unable to get friends for %s" %fb_id)
             return []
         #if we can find the number of friends, turn the string that contains the number of friends into an int
