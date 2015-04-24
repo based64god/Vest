@@ -17,7 +17,12 @@ class FBCrawler(object):
 
         self.username = username
         self.password = password
-        self.driver = webdriver.Firefox()
+
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference('permissions.default.image', 2)
+        profile.set_preference('permissions.default.stylesheet', 2)
+        #profile.set_preference('javascript.enabled', false)
+        self.driver = webdriver.Firefox(profile)
 
 
     def login(this): # ------------------------------------------------------------------------------------------------
