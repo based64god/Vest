@@ -22,6 +22,9 @@ if __name__=="__main__":
 		if command == "-crawler":
 
 			save_yn = str(input("[?] would you like to save the data collected to the database (y/n)?: "))
+			if save_yn == "y":
+				db_path = str(input("[?] Please provide a path and filename for the database (.db): "))
+				db = Database(db_path, 30) #delete data older than 30 days in the database
 
 			print ("[!] To collect data using the crawler please log into Facebook below")
 
@@ -45,9 +48,10 @@ if __name__=="__main__":
 					friend_map = _crawler.get_friends_list(id_list)
 					print ("[!] Friend map generated")
 
-					#if save_yn == "y":
-					#	* save data into database *
-					#	print("[!] Data saved into database")
+					if save_yn == "y":
+						for _id in friend_map.keys():
+							db.insert_friends_to_db(_id, friend_map[_id])
+						print("[!] Data saved into database")
 
 					analyze_yn = str(input("[?] Would you like to analyze the data (y/n)?: "))
 					if analyze_yn == "y":
