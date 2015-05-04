@@ -65,11 +65,11 @@ if __name__=="__main__":
 			db_path = str(input("[?] Please provide a path and filename for the database (.db): "))
 			db = Database(db_path, 30) #delete data older than 30 days in the database
 			print ("[!] Analyzing")
-						ranks = unweighted_ranking(friend_map)
-						for level in range(1,len(ranks))[::-1]:
-							print ("Ids at risk level %d:" %level)
-							for _id in ranks[level]:
-								print ("	%s" %_id )
+			ranks = unweighted_ranking(friend_map)
+			for level in range(1,len(ranks))[::-1]:
+				print ("Ids at risk level %d:" %level)
+				for _id in ranks[level]:
+					print ("	%s" %_id )
 		elif command == "-q":
 			sys.exit()
 
