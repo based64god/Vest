@@ -176,6 +176,25 @@ class Database:
 		except:
 			return []
 
+	def id_in_db(self, _id):
+
+		'''
+		Parameters
+		----------
+		_id - a string containing a facebook id
+
+		Function
+		--------
+		Check if we have the id's friends in the database
+
+		Returns
+		-------
+		True - The id and their friends have been entered in the database
+		False - The id and their friends have not been added to the database
+		'''
+
+		return self.get_friends_from_db(_id) != []
+
 if __name__ == "__main__":
 
 	#test code
