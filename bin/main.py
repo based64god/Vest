@@ -14,7 +14,7 @@ if __name__=="__main__":
 
 		print ("Options:")
 		print ("	-crawler 	use the crawler to gather data and analyze")
-		print ("	-db 		use data from the database and analyze")
+		print ("	-analyze 	use data from the database and analyze")
 		print ("	-q 			quit")
 
 		command = str(input("Enter a command: ").strip().lower().replace("  ",""))
@@ -53,23 +53,23 @@ if __name__=="__main__":
 							db.insert_friends_to_db(_id, friend_map[_id])
 						print("[!] Data saved into database")
 
-					analyze_yn = str(input("[?] Would you like to analyze the data (y/n)?: "))
-					if analyze_yn == "y":
-						print ("[!] Analyzing")
+					continue_yn = str(input("[?] Would you like to gather more data (y/n)?: "))
+					if continue_yn == "n":
+						print ("[!] Exiting the crawler")
+						_crawler.quit()
+						break
+			else:	
+				print ("[!] Error loging in")
+
+		elif command == "-analyze":
+			db_path = str(input("[?] Please provide a path and filename for the database (.db): "))
+			db = Database(db_path, 30) #delete data older than 30 days in the database
+			print ("[!] Analyzing")
 						ranks = unweighted_ranking(friend_map)
 						for level in range(1,len(ranks))[::-1]:
 							print ("Ids at risk level %d:" %level)
 							for _id in ranks[level]:
 								print ("	%s" %_id )
-					continue_yn = str(input("[?] Would you like to gather more data (y/n)?: "))
-					if continue_yn == "n":
-						print ("[!] Exiting the crawler")
-						_crawler.quit()
-						sys.exit()
-
-			else:	
-				print ("[!] Error loging in")
-
 		elif command == "-q":
 			sys.exit()
 
