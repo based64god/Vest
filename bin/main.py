@@ -8,14 +8,14 @@ from analyze import *
 if __name__=="__main__":
 	# runs on python 3.4 or later
 
-	print ("Welcome to Vest v0.1: ")
+	print ("Welcome to Vest v1.0: ")
 	print ()
 	while True:
 
 		print ("Options:")
 		print ("	-crawler 	use the crawler to gather data and analyze")
 		print ("	-db 		use data from the database and analyze")
-		print ("	-q 		quit")
+		print ("	-q 			quit")
 
 		command = str(input("Enter a command: ").strip().lower().replace("  ",""))
 
@@ -70,39 +70,8 @@ if __name__=="__main__":
 			else:	
 				print ("[!] Error loging in")
 
-		elif command == "-db":
-			pass
-
 		elif command == "-q":
 			sys.exit()
 
 		else:
 			print ("Invalid command")
-
-		'''
-	    elif (inputArgs[0]=="-db" and len(inputArgs)==3):
-	    	db=Database()
-
-			if (inputArgs[1]=="-d"):
-				db.dump()
-
-			elif (inputArgs[1]=="-a"):
-				db.stats()
-
-			elif (inputArgs[1]=="-p"):
-				db.predict()
-
-			else:
-				print ("Invalid db flags")
-				sys.exit()
-
-
-		else:
-			print ("Invalid options")
-			sys.exit()
-		'''
-
-
-
-
-	
