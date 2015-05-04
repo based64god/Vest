@@ -166,13 +166,15 @@ class Database:
 		A list containing the friends associated with the id
 		'''
 
-		for row in self.cursor.execute('select * from facebook WHERE id=?', (_id,)):
-			row_str = str(row)
-			break
-		row_str = row_str.replace('(','').replace(')','').replace('\'','')
-		friend_list = row_str.split(',')[1].split()
-		return friend_list
-
+		try:
+			for row in self.cursor.execute('select * from facebook WHERE id=?', (_id,)):
+				row_str = str(row)
+				break
+			row_str = row_str.replace('(','').replace(')','').replace('\'','')
+			friend_list = row_str.split(',')[1].split()
+			return friend_list
+		except:
+			return []
 
 if __name__ == "__main__":
 
