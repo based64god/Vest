@@ -1,13 +1,30 @@
-Vest
-====
+![Vest logo](http://pr4.me/css/images/vest_transparent.png)
 
-A tool to track, predict, and avoid violent crime.
+##Overview
 
-We crawl social media networks to gather connection data so that we might be able to point out the people who are the most connected to victims of violent crime. The basis of our project is that if there are persons A and B, who are victims of violent crime, and they have a mutual friend, C, then that person C is more likely to become a victim of violent crime. We are writing the code to collect data and test this theory.
+A Facebook friend network building tool, an RCOS project at RPI
 
-Articles that inspired our project:
+Vest allows for easy data scraping from friend pages with analysis built in. This project was inspired by studies that found that while violent crime may be prevelent in some areas, most of the violence is contained within a smaller group of individuals. The overall goal of Vest is to take an input of violent crime victims and output the ids of the users most closely connected to them.
 
-http://www.chicagomag.com/city-life/April-2014/Chicago-Gun-Violence-Big-Numbers-But-a-Surprisingly-Small-Network/
+The project employs the selenium webdriver running a firefox browser. Data is saved into a sqlite3 database and analyzed using simple set interactions.
 
-http://news.yale.edu/2013/11/14/study-finds-social-networks-are-key-city-violence
+Check out the articles that inspired out project:
+
+[Chicago Gun Violence: Big Numbers, But a Surprisingly Small Network](http://www.chicagomag.com/city-life/April-2014/Chicago-Gun-Violence-Big-Numbers-But-a-Surprisingly-Small-Network/)
+
+[Study finds social networks are key to city violence](http://news.yale.edu/2013/11/14/study-finds-social-networks-are-key-city-violence)
+
+
+
+##Dependencies
+- Python3
+- Sqlite3
+- Selenium
+- Firefox
+
+##Usage
+
+    $ git clone https://github.com/emmetthitz/Vest.git
+    $ cd Vest/bin/
+    $ python3 main.py 
 
