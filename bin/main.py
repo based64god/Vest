@@ -8,6 +8,18 @@ from analyze import *
 if __name__=="__main__":
 	# runs on python 3.4 or later
 
+	print ()
+	print ()
+	print (" /$$    /$$ /$$$$$$$$  /$$$$$$  /$$$$$$$$")
+	print ("| $$   | $$| $$_____/ /$$__  $$|__  $$__/")
+	print ("| $$   | $$| $$      | $$  \__/   | $$   ")
+	print ("|  $$ / $$/| $$$$$   |  $$$$$$    | $$   ")
+	print (" \  $$ $$/ | $$__/    \____  $$   | $$   ")
+	print ("  \  $$$/  | $$       /$$  \ $$   | $$   ")
+	print ("   \  $/   | $$$$$$$$|  $$$$$$/   | $$   ")
+	print ("    \_/    |________/ \______/    |__/   ")
+	print ()
+	print ()
 	print ("Welcome to Vest v1.0: ")
 	print ()
 	while True:
