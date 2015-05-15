@@ -44,23 +44,23 @@ def list_functions():
 def get_friends_test(_crawler):
 	fb_id = str(input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person's friends you want to retrive: "))
 	friend_list = _crawler.get_friends(fb_id)
-	print ("%s's friends:" %fb_id)
+	print ("{!s}'s friends:".format(fb_id))
 	for f in friend_list:
-		print ("    %s" %f)
+		print ("    {!s}".format(f))
 
 def get_friends_list_test(_crawler):
 	list_len = int(input("[+] Enter the number of id's in the list: "))
 	count = 1
 	id_list = []
 	while count <= list_len:
-		id_list.append(str(input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) #%d: " %count)))
+		id_list.append(str(input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) #{}: ".format(count))))
 		count += 1
 	friend_map = _crawler.get_friends_list(id_list)
 	print
 	for _id in id_list:
-		print ("%s's friends:" %_id)
+		print ("{!s}'s friends:".format(_id))
 		for f in friend_map[_id]:
-			print ("    %s" %f	)
+			print ("    {!s}".format(f))
 		print
 
 
@@ -69,27 +69,27 @@ def crawl_test(_crawler):
 	depth = int(input("[+] Depth do you want to scroll this id's friends: "))
 	friend_map = _crawler.crawl_to_depth(fb_id, depth)
 	for key in friend_map.keys():
-		print ("%s's friends:" %key)
+		print ("{!s}'s friends:".format(key))
 		for _id in friend_map[key]:
-			print ("    %s" %_id)
+			print ("    {!s}".format(_id))
 
 
 def check_friend_test(_crawler):
 	fb_id = str(input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person you want to check: "))
-	_crawler.driver.get("https://www.facebook.com/%s/friends" %fb_id)
+	_crawler.driver.get("https://www.facebook.com/{!s}/friends".format(fb_id))
 	if _crawler.is_friend():
-		print ("%s is friends with the crawler account" %fb_id)
+		print ("{!s} is friends with the crawler account".format(fb_id))
 	else:
-		print ("%s is not friends with the crawler account" %fb_id)
+		print ("{!s} is not friends with the crawler account".format(fb_id))
 
 
 def add_friend_test(_crawler):
 	fb_id = str(input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person you want to send a request to: "))
-	_crawler.driver.get("https://www.facebook.com/%s/friends" %fb_id)
+	_crawler.driver.get("https://www.facebook.com/{!s}/friends".format(fb_id))
 	if _crawler.add_friend():
-		print ("A friend request has been sent to %s" %fb_id)
+		print ("A friend request has been sent to {!s}".format(fb_id))
 	else:
-		print ("Unable to send request to %s, they may be already friends with the crawler account" %fb_id)
+		print ("Unable to send request to {!s}, they may be already friends with the crawler account".format(fb_id))
 
 def remove_friend_or_cancel_request_test(_crawler):
 	fb_id = str(input("[+] Facebook ID (https://www.facebook.com/ ** id here ** /) of the person you want to send a request to: "))

@@ -99,7 +99,7 @@ class Database:
 				#delete this data from the database because its too old
 			if (TODAY_DATE - row_date).days >= max_age: 
 				self.delete_row(row_list[0])
-				print ('[!] %s and friends deleted from database (entry was out of date)' %row_list[0])
+				print ('[!] {!s} and friends deleted from database (entry was out of date)'.format(row_list[0]))
 
 
 	def delete_row(self, _id):
@@ -143,7 +143,7 @@ class Database:
 			friends_str = ' '.join(friends)
 		try:
 			params = (_id, friends_str, str(datetime.now()).split()[0])
-			self.cursor.execute('INSERT INTO facebook VALUES(?, ?, ?)', params )
+			self.cursor.execute('INSERT OR REPLACE INTO facebook VALUES(?, ?, ?)', params )
 			self.db.commit()
 			return True
 		except sqlite3.IntegrityError as err:
@@ -167,9 +167,7 @@ class Database:
 		'''
 
 		try:
-			for row in self.cursor.execute('select * from facebook WHERE id=?', (_id,)):
-				row_str = str(row)
-				break
+			row_str = str(self.cursor.execute('select * from facebook WHERE id=?', (_id)))
 			row_str = row_str.replace('(','').replace(')','').replace('\'','')
 			friend_list = row_str.split(',')[1].split()
 			return friend_list
@@ -194,6 +192,34 @@ class Database:
 		'''
 
 		return self.get_friends_from_db(_id) != []
+
+	def get_days_old(self, _id):
+		'''
+		Parameters
+		----------
+		_id - a string containing a facebook id
+
+		Function
+		--------
+		Check the date the id was added
+
+		Returns
+		-------
+		The datetime object of the specified ID
+		'''
+
+		DATE_FORMAT = "%Y-%m-%d"
+		TODAY_DATE = datetime.strptime(str(datetime.now()).split()[0], DATE_FORMAT)
+
+
+		#parse row string to get the date
+		row_str = str(self.cursor.execute('select * from facebook WHERE id=?', _id))
+		row_str = row_str.replace('(','').replace(')','').replace('\'','')
+		row_list = row_str.split(',')
+		date_str = row_list[2].replace(' ','')
+
+		#calculate days old and return it
+		return (TODAY_DATE - datetime.strptime(date_str, DATE_FORMAT)).days
 
 if __name__ == "__main__":
 

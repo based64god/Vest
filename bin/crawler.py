@@ -81,7 +81,7 @@ class FBCrawler(object):
 
         if not this.is_friend(fb_id):
             this.add_friend(fb_id)
-        this.driver.get("m.facebook.com/%s?v=friends" %fb_id) #load the page
+        this.driver.get("m.facebook.com/{!s}?v=friends".format(fb_id)) #load the page
         friends = []
         #get the source of the page so we can parse it
         page_src = ""
@@ -101,7 +101,7 @@ class FBCrawler(object):
             #if we cant find the number of friends then  num_friends_str will be an empty string
             #we dont have access to their friends so return and empty list for this person
         if num_friends_str == '':
-            print ("[!] unable to get friends for %s" %fb_id)
+            print ("[!] unable to get friends for {!s}".format(fb_id))
             return []
         #if we can find the number of friends, turn the string that contains the number of friends into an int
         num_friends_int = int(num_friends_str.replace(",","")) 
@@ -117,9 +117,9 @@ class FBCrawler(object):
                 n = 24
             else:
                 n = n + 36
-            this.driver.get("https://m.facebook.com/%s?v=friends&mutual&startindex=%d" %(fb_id,n)) 
+            this.driver.get("https://m.facebook.com/{!s}?v=friends&mutual&startindex={}".format(fb_id,n)) 
             #load the next page containing the person's friends, 
-                #startindex=%d picks the range of friends (n to n+36) that will be shown
+                #startindex picks the range of friends (n to n+36) that will be shown
             
 
         return friends
@@ -232,7 +232,7 @@ class FBCrawler(object):
         False - crawler is not friends with ID
         '''
 
-        this.driver.get("facebook.com/%s/friends" %fb_id)
+        this.driver.get("facebook.com/{!s}/friends".format(fb_id))
         elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
         html_string = ""
         for elem in elements:
@@ -258,7 +258,7 @@ class FBCrawler(object):
         False - friend request failed
         '''     
 
-        this.driver.get("facebook.com/%s/friends" %fb_id)
+        this.driver.get("facebook.com/{!s}/friends".format(fb_id))
         try: #try to add the friend
             button = this.driver.find_element_by_css_selector("._42ft._4jy0.FriendRequestAdd.addButton._4jy4._517h._9c6");
             button.send_keys("\n")
@@ -292,7 +292,7 @@ class FBCrawler(object):
         None
         '''    
 
-        this.driver.get("m.facebook.com/%s" %fb_id)
+        this.driver.get("m.facebook.com/{!s}".format(fb_id))
         elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
         html_string = ""
         for elem in elements:
@@ -303,7 +303,7 @@ class FBCrawler(object):
             end_index = link_index
             while html_string[end_index] != '"':
                 end_index = end_index + 1
-            this.driver.get("m.facebook.com/%s" %html_string[link_index:end_index])
+            this.driver.get("m.facebook.com/{!s}".format(html_string[link_index:end_index]))
             return
         link_index = html_string.find('<a href="/removefriend.php?friend_id=')
         if link_index != -1:
@@ -311,7 +311,7 @@ class FBCrawler(object):
             end_index = link_index
             while html_string[end_index] != '"':
                 end_index = end_index + 1
-            this.driver.get("m.facebook.com/%s" %html_string[link_index:end_index])
+            this.driver.get("m.facebook.com/{!s}".format(html_string[link_index:end_index]))
             return
 
     def get_name(this, fb_id):
@@ -331,7 +331,7 @@ class FBCrawler(object):
         String containing user's full name
         '''
 
-        this.driver.get("facebook.com/%s" %fb_id)
+        this.driver.get("facebook.com/{!s}".format(fb_id))
 
         elem = this.driver.find_element_by_id("fb-timeline-cover-name")
 
