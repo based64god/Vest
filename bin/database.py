@@ -167,7 +167,9 @@ class Database:
 		'''
 
 		try:
-			row_str = str(self.cursor.execute('select * from facebook WHERE id=?', (_id)))
+			for row in self.cursor.execute('select * from facebook WHERE id=?', (_id,)):
+				row_str = str(row)
+				break
 			row_str = row_str.replace('(','').replace(')','').replace('\'','')
 			friend_list = row_str.split(',')[1].split()
 			return friend_list
@@ -213,7 +215,9 @@ class Database:
 
 
 		#parse row string to get the date
-		row_str = str(self.cursor.execute('select * from facebook WHERE id=?', _id))
+		for row in self.cursor.execute('select * from facebook WHERE id=?', (_id,)):
+				row_str = str(row)
+				break
 		row_str = row_str.replace('(','').replace(')','').replace('\'','')
 		row_list = row_str.split(',')
 		date_str = row_list[2].replace(' ','')
