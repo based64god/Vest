@@ -25,7 +25,7 @@ class FBCrawler(object):
         self.driver = webdriver.Firefox(profile)
 
 
-    def login(this): # ------------------------------------------------------------------------------------------------
+    def login(self): # ------------------------------------------------------------------------------------------------
 
         '''
         Parameters
@@ -44,24 +44,24 @@ class FBCrawler(object):
         
         print ("[!] Logging in.")
 
-        this.driver.get("https://www.facebook.com/")
+        self.driver.get("https://www.facebook.com/")
 
-        assert "Facebook" in this.driver.title
-        elem = this.driver.find_element_by_id("email")
-        elem.send_keys(this.username)
-        elem = this.driver.find_element_by_id("pass")
-        elem.send_keys(this.password)
+        assert "Facebook" in self.driver.title
+        elem = self.driver.find_element_by_id("email")
+        elem.send_keys(self.username)
+        elem = self.driver.find_element_by_id("pass")
+        elem.send_keys(self.password)
         elem.send_keys(Keys.RETURN)
 
         time.sleep(5)
 
-        return not "UIPage_LoggedOut" in this.driver.page_source 
+        return not "UIPage_LoggedOut" in self.driver.page_source 
             #"UIPage_LoggedOut" will be in the html of the page if the user is not logged in
             #it should not appear here unless the login is unsuccessful, which will cause 
             #the function to return false
 
 
-    def get_friends(this, fb_id): # -----------------------------------------------------------------------------------
+    def get_friends(self, fb_id): # -----------------------------------------------------------------------------------
 
         '''
         Parameters
@@ -79,13 +79,13 @@ class FBCrawler(object):
         '''
 
 
-        if not this.is_friend(fb_id):
-            this.add_friend(fb_id)
-        this.driver.get("m.facebook.com/{!s}?v=friends".format(fb_id)) #load the page
+        if not self.is_friend(fb_id):
+            self.add_friend(fb_id)
+        self.driver.get("m.facebook.com/{!s}?v=friends".format(fb_id)) #load the page
         friends = []
         #get the source of the page so we can parse it
         page_src = ""
-        elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
+        elements = self.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
         for elem in elements:
             page_src += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
         #we need to determine how many friends the person has so we find it when we parse the first time
@@ -108,16 +108,16 @@ class FBCrawler(object):
         page_src = ""
         n = 0 #counter to hold the start of the range of friends we are looking at
         while n < num_friends_int:
-            elements = this.driver.find_elements_by_tag_name('body') #get the source of the page again
+            elements = self.driver.find_elements_by_tag_name('body') #get the source of the page again
             for elem in elements:                           
                 page_src += elem.get_attribute('innerHTML')
-            friends.extend(this.parse_fb_friend_page(page_src)) #parse each page to get the friends on it
+            friends.extend(self.parse_fb_friend_page(page_src)) #parse each page to get the friends on it
             page_src = "" 
             if n == 0: #for some first page only shows 24 friends and the rest show 36, this accounts for that
                 n = 24
             else:
                 n = n + 36
-            this.driver.get("https://m.facebook.com/{!s}?v=friends&mutual&startindex={}".format(fb_id,n)) 
+            self.driver.get("https://m.facebook.com/{!s}?v=friends&mutual&startindex={}".format(fb_id,n)) 
             #load the next page containing the person's friends, 
                 #startindex picks the range of friends (n to n+36) that will be shown
             
@@ -125,7 +125,7 @@ class FBCrawler(object):
         return friends
 
 
-    def parse_fb_friend_page(this, text): # ---------------------------------------------------------------------------
+    def parse_fb_friend_page(self, text): # ---------------------------------------------------------------------------
 
         '''
         Parameters
@@ -158,7 +158,7 @@ class FBCrawler(object):
         return friends
 
 
-    def crawl_to_depth(this, start_id, depth): # ----------------------------------------------------------------------
+    def crawl_to_depth(self, start_id, depth): # ----------------------------------------------------------------------
 
         '''
         Parameters
@@ -178,12 +178,12 @@ class FBCrawler(object):
         '''
 
         friend_map = {}
-        queue = this.get_friends(start_id)
+        queue = self.get_friends(start_id)
         friend_map[start_id] = queue
         while depth > 0:
             for _id in queue:
                 if not _id in friend_map.keys():
-                    friends = this.get_friends(_id)
+                    friends = self.get_friends(_id)
                     friend_map[_id] = friends
                     for f in friends:
                         if not f in queue:
@@ -192,7 +192,7 @@ class FBCrawler(object):
             depth -= 1
         return friend_map
 
-    def get_friends_list(this, id_list): # ----------------------------------------------------------------------
+    def get_friends_list(self, id_list): # ----------------------------------------------------------------------
 
         '''
         Parameters
@@ -211,11 +211,11 @@ class FBCrawler(object):
 
         friend_map = {}
         for _id in id_list:
-            friend_map[_id] = this.get_friends(_id)
+            friend_map[_id] = self.get_friends(_id)
         return friend_map
 
 
-    def is_friend(this, fb_id): # --------------------------------------------------------------------------------------------
+    def is_friend(self, fb_id): # --------------------------------------------------------------------------------------------
 
         '''
         Parameters
@@ -232,15 +232,15 @@ class FBCrawler(object):
         False - crawler is not friends with ID
         '''
 
-        this.driver.get("facebook.com/{!s}/friends".format(fb_id))
-        elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
+        self.driver.get("facebook.com/{!s}/friends".format(fb_id))
+        elements = self.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
         html_string = ""
         for elem in elements:
             html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
         return not "Do you know" in html_string
 
 
-    def add_friend(this, fb_id): # -------------------------------------------------------------------------------------------
+    def add_friend(self, fb_id): # -------------------------------------------------------------------------------------------
 
         '''
         Parameters
@@ -258,25 +258,25 @@ class FBCrawler(object):
         False - friend request failed
         '''     
 
-        this.driver.get("facebook.com/{!s}/friends".format(fb_id))
+        self.driver.get("facebook.com/{!s}/friends".format(fb_id))
         try: #try to add the friend
-            button = this.driver.find_element_by_css_selector("._42ft._4jy0.FriendRequestAdd.addButton._4jy4._517h._9c6");
+            button = self.driver.find_element_by_css_selector("._42ft._4jy0.FriendRequestAdd.addButton._4jy4._517h._9c6");
             button.send_keys("\n")
             #refreshes the page to test if the request was sent
-            this.driver.refresh()
+            self.driver.refresh()
             time.sleep(.5)
-            this.driver.execute_script("window.scrollBy(0, 3000);")
+            self.driver.execute_script("window.scrollBy(0, 3000);")
             time.sleep(.5)
 
         finally:
             #now check if the friend request was sent
-            elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
+            elements = self.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
             html_string = ""
             for elem in elements:
                 html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
             return "Friend Request Sent" in html_string
 
-    def remove_friend_or_cancel_request(this, fb_id): #-------------------------------------------------------------------
+    def remove_friend_or_cancel_request(self, fb_id): #-------------------------------------------------------------------
 
         '''
         Parameters
@@ -292,8 +292,8 @@ class FBCrawler(object):
         None
         '''    
 
-        this.driver.get("m.facebook.com/{!s}".format(fb_id))
-        elements = this.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
+        self.driver.get("m.facebook.com/{!s}".format(fb_id))
+        elements = self.driver.find_elements_by_tag_name('body') #get all of the html in a list of WebElement objects
         html_string = ""
         for elem in elements:
             html_string += elem.get_attribute('innerHTML')  #add the text of each element to a big string for parsing
@@ -303,7 +303,7 @@ class FBCrawler(object):
             end_index = link_index
             while html_string[end_index] != '"':
                 end_index = end_index + 1
-            this.driver.get("m.facebook.com/{!s}".format(html_string[link_index:end_index]))
+            self.driver.get("m.facebook.com/{!s}".format(html_string[link_index:end_index]))
             return
         link_index = html_string.find('<a href="/removefriend.php?friend_id=')
         if link_index != -1:
@@ -311,10 +311,10 @@ class FBCrawler(object):
             end_index = link_index
             while html_string[end_index] != '"':
                 end_index = end_index + 1
-            this.driver.get("m.facebook.com/{!s}".format(html_string[link_index:end_index]))
+            self.driver.get("m.facebook.com/{!s}".format(html_string[link_index:end_index]))
             return
 
-    def get_name(this, fb_id):
+    def get_name(self, fb_id):
 
         '''
         Parameters
@@ -331,13 +331,13 @@ class FBCrawler(object):
         String containing user's full name
         '''
 
-        this.driver.get("facebook.com/{!s}".format(fb_id))
+        self.driver.get("facebook.com/{!s}".format(fb_id))
 
-        elem = this.driver.find_element_by_id("fb-timeline-cover-name")
+        elem = self.driver.find_element_by_id("fb-timeline-cover-name")
 
         return elem.text
 
-    def quit(this): # -------------------------------------------------------------------------------------------------
+    def quit(self): # -------------------------------------------------------------------------------------------------
 
         '''
         Parameters
@@ -353,7 +353,7 @@ class FBCrawler(object):
         None
         '''
 
-        this.driver.quit()
+        self.driver.quit()
 
 if __name__ == "__main__":
     print 
